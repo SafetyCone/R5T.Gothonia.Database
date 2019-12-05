@@ -77,6 +77,19 @@ namespace R5T.Gothonia.Database
             });
         }
 
+        public bool Exists(string name)
+        {
+            var exists = this.ExecuteInContext(dbContext =>
+            {
+                var entity = dbContext.TextItemTypes.Where(x => x.Name == name).SingleOrDefault();
+
+                var output = entity is object;
+                return output;
+            });
+
+            return exists;
+        }
+
         public bool Exists(TextItemTypeIdentity identity)
         {
             var exists = this.ExecuteInContext(dbContext =>
@@ -88,6 +101,36 @@ namespace R5T.Gothonia.Database
             });
 
             return exists;
+        }
+
+        public TextItemTypeIdentity GetIdentity(string name)
+        {
+            var identity = this.ExecuteInContext(dbContext =>
+            {
+                var guid = dbContext.TextItemTypes.Where(x => x.Name == name).Select(x => x.GUID).Single();
+
+                var output = TextItemTypeIdentity.From(guid);
+                return output;
+            });
+
+            return identity;
+        }
+
+        public TextItemType Get(string name)
+        {
+            var textItemType = this.ExecuteInContext(dbContext =>
+            {
+                var entity = dbContext.TextItemTypes.Where(x => x.Name == name).Single();
+
+                var output = new TextItemType()
+                {
+                    Identity = TextItemTypeIdentity.From(entity.GUID),
+                    Name = entity.Name, // Use entity name, not the input name for exactness.
+                };
+                return output;
+            });
+
+            return textItemType;
         }
 
         public TextItemType Get(TextItemTypeIdentity identity)
