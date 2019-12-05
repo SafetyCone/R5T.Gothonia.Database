@@ -149,7 +149,7 @@ namespace R5T.Gothonia.Database
 
                 dbContext.TextItems.Remove(entity);
                 return dbContext;
-            })
+            });
         }
     }
 }
