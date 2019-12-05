@@ -15,5 +15,14 @@ namespace R5T.Gothonia.Database
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Entities.TextItem>().HasAlternateKey(x => x.GUID);
+            modelBuilder.Entity<Entities.TextItemType>().HasAlternateKey(x => x.GUID);
+            modelBuilder.Entity<Entities.TextItemType>().HasAlternateKey(x => x.Name);
+        }
     }
 }
