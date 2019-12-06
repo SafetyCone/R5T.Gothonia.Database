@@ -72,7 +72,10 @@ namespace R5T.Gothonia.Database
                     TextItemTypeID = textItemTypeID,
                     Value = textItem.Value,
                 };
-                return entity;
+
+                dbContext.TextItems.Add(entity);
+
+                dbContext.SaveChanges();
             });
 
             return textItemIdentity;
