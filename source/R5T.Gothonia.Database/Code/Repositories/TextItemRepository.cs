@@ -9,17 +9,12 @@ using R5T.Venetia;
 
 namespace R5T.Gothonia.Database
 {
-    public class TextItemRepository : DatabaseRepositoryBase<TextItemDbContext>, ITextItemRepository
+    public class TextItemRepository<TDbContext> : ProvidedDatabaseRepositoryBase<TDbContext>, ITextItemRepository
+        where TDbContext: DbContext, ITextItemDbContext
     {
-        public TextItemRepository(DbContextOptions<TextItemDbContext> dbContextOptions)
-            : base(dbContextOptions)
+        public TextItemRepository(DbContextOptions<TDbContext> dbContextOptions, IDbContextProvider<TDbContext> dbContextProvider)
+            : base(dbContextOptions, dbContextProvider)
         {
-        }
-
-        public override TextItemDbContext GetNewDbContext()
-        {
-            var dbContext = new TextItemDbContext(this.DbContextOptions);
-            return dbContext;
         }
 
         public TextItemIdentity New()
