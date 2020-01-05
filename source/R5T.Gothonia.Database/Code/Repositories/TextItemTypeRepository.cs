@@ -21,7 +21,7 @@ namespace R5T.Gothonia.Database
         {
             var textItemTypeIdentity = TextItemTypeIdentity.New();
 
-            this.ExecuteInContext(dbContext =>
+            this.ExecuteInContextSync(dbContext =>
             {
                 var entity = new Entities.TextItemType()
                 {
@@ -40,7 +40,7 @@ namespace R5T.Gothonia.Database
         {
             var textItemTypeIdentity = TextItemTypeIdentity.New();
 
-            this.ExecuteInContext(dbContext =>
+            this.ExecuteInContextSync(dbContext =>
             {
                 var entity = new Entities.TextItemType()
                 {
@@ -58,7 +58,7 @@ namespace R5T.Gothonia.Database
 
         public void Add(TextItemType textItemType)
         {
-            this.ExecuteInContext(dbContext =>
+            this.ExecuteInContextSync(dbContext =>
             {
                 var entity = new Entities.TextItemType()
                 {
@@ -74,7 +74,7 @@ namespace R5T.Gothonia.Database
 
         public bool Exists(string name)
         {
-            var exists = this.ExecuteInContext(dbContext =>
+            var exists = this.ExecuteInContextSync(dbContext =>
             {
                 var entity = dbContext.TextItemTypes.Where(x => x.Name == name).SingleOrDefault();
 
@@ -87,7 +87,7 @@ namespace R5T.Gothonia.Database
 
         public bool Exists(TextItemTypeIdentity identity)
         {
-            var exists = this.ExecuteInContext(dbContext =>
+            var exists = this.ExecuteInContextSync(dbContext =>
             {
                 var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).SingleOrDefault();
 
@@ -100,7 +100,7 @@ namespace R5T.Gothonia.Database
 
         public TextItemTypeIdentity GetIdentity(string name)
         {
-            var identity = this.ExecuteInContext(dbContext =>
+            var identity = this.ExecuteInContextSync(dbContext =>
             {
                 var guid = dbContext.TextItemTypes.Where(x => x.Name == name).Select(x => x.GUID).Single();
 
@@ -113,7 +113,7 @@ namespace R5T.Gothonia.Database
 
         public TextItemType Get(string name)
         {
-            var textItemType = this.ExecuteInContext(dbContext =>
+            var textItemType = this.ExecuteInContextSync(dbContext =>
             {
                 var entity = dbContext.TextItemTypes.Where(x => x.Name == name).Single();
 
@@ -130,7 +130,7 @@ namespace R5T.Gothonia.Database
 
         public TextItemType Get(TextItemTypeIdentity identity)
         {
-            var textItemType = this.ExecuteInContext(dbContext =>
+            var textItemType = this.ExecuteInContextSync(dbContext =>
             {
                 var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Single();
 
@@ -147,7 +147,7 @@ namespace R5T.Gothonia.Database
 
         public string GetName(TextItemTypeIdentity identity)
         {
-            var name = this.ExecuteInContext(dbContext =>
+            var name = this.ExecuteInContextSync(dbContext =>
             {
                 var output = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Select(x => x.Name).Single();
                 return output;
@@ -158,7 +158,7 @@ namespace R5T.Gothonia.Database
 
         public void SetName(TextItemTypeIdentity identity, string name)
         {
-            this.ExecuteInContext(dbContext =>
+            this.ExecuteInContextSync(dbContext =>
             {
                 var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Single();
 
@@ -170,7 +170,7 @@ namespace R5T.Gothonia.Database
 
         public void Delete(TextItemTypeIdentity identity)
         {
-            this.ExecuteInContext(dbContext =>
+            this.ExecuteInContextSync(dbContext =>
             {
                 var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Single();
 
