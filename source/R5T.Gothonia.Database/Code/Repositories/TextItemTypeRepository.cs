@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +18,11 @@ namespace R5T.Gothonia.Database
         {
         }
 
-        public TextItemTypeIdentity New()
+        public async Task<TextItemTypeIdentity> New()
         {
             var textItemTypeIdentity = TextItemTypeIdentity.New();
 
-            this.ExecuteInContextSync(dbContext =>
+            await this.ExecuteInContextAsync(async dbContext =>
             {
                 var entity = new Entities.TextItemType()
                 {
@@ -30,17 +31,17 @@ namespace R5T.Gothonia.Database
 
                 dbContext.Add(entity);
 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             });
 
             return textItemTypeIdentity;
         }
 
-        public TextItemTypeIdentity New(string name)
+        public async Task<TextItemTypeIdentity> New(string name)
         {
             var textItemTypeIdentity = TextItemTypeIdentity.New();
 
-            this.ExecuteInContextSync(dbContext =>
+            await this.ExecuteInContextAsync(async dbContext =>
             {
                 var entity = new Entities.TextItemType()
                 {
@@ -50,15 +51,15 @@ namespace R5T.Gothonia.Database
 
                 dbContext.Add(entity);
 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             });
 
             return textItemTypeIdentity;
         }
 
-        public void Add(TextItemType textItemType)
+        public async Task Add(TextItemType textItemType)
         {
-            this.ExecuteInContextSync(dbContext =>
+            await this.ExecuteInContextSync(async dbContext =>
             {
                 var entity = new Entities.TextItemType()
                 {
@@ -68,15 +69,15 @@ namespace R5T.Gothonia.Database
 
                 dbContext.Add(entity);
 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             });
         }
 
-        public bool Exists(string name)
+        public async Task<bool> Exists(string name)
         {
-            var exists = this.ExecuteInContextSync(dbContext =>
+            var exists = await this.ExecuteInContextSync(async dbContext =>
             {
-                var entity = dbContext.TextItemTypes.Where(x => x.Name == name).SingleOrDefault();
+                var entity = await dbContext.TextItemTypes.Where(x => x.Name == name).SingleOrDefaultAsync();
 
                 var output = entity is object;
                 return output;
@@ -85,11 +86,11 @@ namespace R5T.Gothonia.Database
             return exists;
         }
 
-        public bool Exists(TextItemTypeIdentity identity)
+        public async Task<bool> Exists(TextItemTypeIdentity identity)
         {
-            var exists = this.ExecuteInContextSync(dbContext =>
+            var exists = await this.ExecuteInContextAsync(async dbContext =>
             {
-                var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).SingleOrDefault();
+                var entity = await dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).SingleOrDefaultAsync();
 
                 var output = entity is object;
                 return output;
@@ -98,11 +99,11 @@ namespace R5T.Gothonia.Database
             return exists;
         }
 
-        public TextItemTypeIdentity GetIdentity(string name)
+        public async Task<TextItemTypeIdentity> GetIdentity(string name)
         {
-            var identity = this.ExecuteInContextSync(dbContext =>
+            var identity = await this.ExecuteInContextAsync(async dbContext =>
             {
-                var guid = dbContext.TextItemTypes.Where(x => x.Name == name).Select(x => x.GUID).Single();
+                var guid = await dbContext.TextItemTypes.Where(x => x.Name == name).Select(x => x.GUID).SingleAsync();
 
                 var output = TextItemTypeIdentity.From(guid);
                 return output;
@@ -111,11 +112,11 @@ namespace R5T.Gothonia.Database
             return identity;
         }
 
-        public TextItemType Get(string name)
+        public async Task<TextItemType> Get(string name)
         {
-            var textItemType = this.ExecuteInContextSync(dbContext =>
+            var textItemType = await this.ExecuteInContextAsync(async dbContext =>
             {
-                var entity = dbContext.TextItemTypes.Where(x => x.Name == name).Single();
+                var entity = await dbContext.TextItemTypes.Where(x => x.Name == name).SingleAsync();
 
                 var output = new TextItemType()
                 {
@@ -128,11 +129,11 @@ namespace R5T.Gothonia.Database
             return textItemType;
         }
 
-        public TextItemType Get(TextItemTypeIdentity identity)
+        public async Task<TextItemType> Get(TextItemTypeIdentity identity)
         {
-            var textItemType = this.ExecuteInContextSync(dbContext =>
+            var textItemType = await this.ExecuteInContextAsync(async dbContext =>
             {
-                var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Single();
+                var entity = await dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).SingleAsync();
 
                 var output = new TextItemType()
                 {
@@ -145,22 +146,22 @@ namespace R5T.Gothonia.Database
             return textItemType;
         }
 
-        public string GetName(TextItemTypeIdentity identity)
+        public async Task<string> GetName(TextItemTypeIdentity identity)
         {
-            var name = this.ExecuteInContextSync(dbContext =>
+            var name = await this.ExecuteInContextAsync(async dbContext =>
             {
-                var output = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Select(x => x.Name).Single();
+                var output = await dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Select(x => x.Name).SingleAsync();
                 return output;
             });
 
             return name;
         }
 
-        public void SetName(TextItemTypeIdentity identity, string name)
+        public async Task SetName(TextItemTypeIdentity identity, string name)
         {
-            this.ExecuteInContextSync(dbContext =>
+            await this.ExecuteInContextAsync(async dbContext =>
             {
-                var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Single();
+                var entity = await dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).SingleAsync();
 
                 entity.Name = name;
 
@@ -168,15 +169,15 @@ namespace R5T.Gothonia.Database
             });
         }
 
-        public void Delete(TextItemTypeIdentity identity)
+        public async Task Delete(TextItemTypeIdentity identity)
         {
-            this.ExecuteInContextSync(dbContext =>
+            await this.ExecuteInContextAsync(async dbContext =>
             {
-                var entity = dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).Single();
+                var entity = await dbContext.TextItemTypes.Where(x => x.GUID == identity.Value).SingleAsync();
 
                 dbContext.TextItemTypes.Remove(entity);
 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             });
         }
     }
