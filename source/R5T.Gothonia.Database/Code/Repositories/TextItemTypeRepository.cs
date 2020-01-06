@@ -59,7 +59,7 @@ namespace R5T.Gothonia.Database
 
         public async Task Add(TextItemType textItemType)
         {
-            await this.ExecuteInContextSync(async dbContext =>
+            await this.ExecuteInContextAsync(async dbContext =>
             {
                 var entity = new Entities.TextItemType()
                 {
@@ -75,7 +75,7 @@ namespace R5T.Gothonia.Database
 
         public async Task<bool> Exists(string name)
         {
-            var exists = await this.ExecuteInContextSync(async dbContext =>
+            var exists = await this.ExecuteInContextAsync(async dbContext =>
             {
                 var entity = await dbContext.TextItemTypes.Where(x => x.Name == name).SingleOrDefaultAsync();
 
