@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -67,7 +68,7 @@ namespace R5T.Gothonia.Database
 
                 var entity = new Entities.TextItem()
                 {
-                    GUID = textItem.Identity.Value,
+                    GUID = textItemIdentity.Value,
                     TextItemTypeID = textItemTypeID,
                     Value = textItem.Value,
                 };
@@ -153,6 +154,25 @@ namespace R5T.Gothonia.Database
 
                 await dbContext.SaveChangesAsync();
             });
+        }
+
+        public async Task<IEnumerable<(string TypeName, string Value)>> GetTypedValuesAsync(IEnumerable<TextItemIdentity> textItemIdentities)
+        {
+            var textItemIdentityValues = textItemIdentities.Select(x => x.Value);
+
+            var anonymousValues = await this.ExecuteInContext(async dbContext =>
+            {
+                var values = await dbContext.TextItems
+                .Include(x => x.TextItemType)
+                .Where(x => textItemIdentityValues.Contains(x.GUID))
+                .Select(x => new { TypeName = x.TextItemType.Name, x.Value }) // Named tuples cannot appear in an expression tree, so use anonymous types and convert.
+                .ToListAsync();
+
+                return values;
+            });
+
+            var typedValues = anonymousValues.Select(x => (TypeName: x.TypeName, Value: x.Value));
+            return typedValues;
         }
     }
 }
