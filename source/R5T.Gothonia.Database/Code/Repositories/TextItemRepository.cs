@@ -121,24 +121,6 @@ namespace R5T.Gothonia.Database
             return textItemTypeIdentity;
         }
 
-        public async Task SetValue(TextItemTypeIdentity identity, string value)
-        {
-            await this.ExecuteInContextAsync(async dbContext =>
-            {
-                var textItemEntity = await
-                    (from x in dbContext.TextItems
-                     join y in dbContext.TextItemTypes
-                     on x.TextItemTypeID equals y.ID
-                     where y.GUID == identity.Value
-                     select x
-                    ).SingleAsync();
-
-                textItemEntity.Value = value;
-
-                dbContext.SaveChanges();
-            });
-        }
-
         public async Task SetValue(TextItemIdentity identity, string value)
         {
             await this.ExecuteInContextAsync(async dbContext =>
