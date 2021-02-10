@@ -156,22 +156,25 @@ namespace R5T.Gothonia.Database
             });
         }
 
-        public async Task<IEnumerable<(string TypeName, string Value)>> GetTypedValuesAsync(IEnumerable<TextItemIdentity> textItemIdentities)
+        public async Task<List<(string TypeName, string Value)>> GetTypedValuePairs(IEnumerable<TextItemIdentity> textItemIdentities)
         {
             var textItemIdentityValues = textItemIdentities.Select(x => x.Value);
 
             var anonymousValues = await this.ExecuteInContext(async dbContext =>
             {
                 var values = await dbContext.TextItems
-                .Include(x => x.TextItemType)
-                .Where(x => textItemIdentityValues.Contains(x.GUID))
-                .Select(x => new { TypeName = x.TextItemType.Name, x.Value }) // Named tuples cannot appear in an expression tree, so use anonymous types and convert.
-                .ToListAsync();
+                    .Include(x => x.TextItemType)
+                    .Where(x => textItemIdentityValues.Contains(x.GUID))
+                    .Select(x => new { TypeName = x.TextItemType.Name, x.Value }) // Named tuples cannot appear in an expression tree, so use anonymous types and convert.
+                    .ToListAsync();
 
                 return values;
             });
 
-            var typedValues = anonymousValues.Select(x => (TypeName: x.TypeName, Value: x.Value));
+            var typedValues = anonymousValues
+                .Select(x => (TypeName: x.TypeName, Value: x.Value))
+                .ToList();
+
             return typedValues;
         }
     }
